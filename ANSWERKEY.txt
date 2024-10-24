@@ -1,0 +1,55 @@
+CORRECT:
+
+from flask import Flask, request, render_template
+import sqlite3
+import re
+from werkzeug.security import generate_password_hash
+
+app = Flask(__name__)
+
+# Secure: Password hashing using Werkzeug
+def init_db():
+    conn = sqlite3.connect('users.db')
+    conn.execute('CREATE TABLE IF NOT EXISTS users (username TEXT, password TEXT)')
+    conn.close()
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # Secure: Input validation
+        if not re.match("^[A-Za-z0-9]*$", username):
+            return "Invalid username"
+
+        if len(password) < 8:
+            return "Password must be at least 8 characters long"
+
+        # Secure: Hashing the password
+        hashed_password = generate_password_hash(password)
+
+        conn = sqlite3.connect('users.db')
+        conn.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_password))
+        conn.commit()
+        conn.close()
+        return "User Registered"
+    return render_template('form.html')
+
+if __name__ == "__main__":
+    init_db()
+    app.run(debug=True)
+
+
+----
+
+<!DOCTYPE html>
+<html>
+<body>
+    <form method="POST">
+        Username: <input type="text" name="username" required><br>
+        Password: <input type="password" name="password" required><br>
+        <input type="submit" value="Register">
+    </form>
+</body>
+</html>
