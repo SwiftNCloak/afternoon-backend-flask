@@ -45,6 +45,10 @@ if __name__ == "__main__":
 
 <!DOCTYPE html>
 <html>
+    <head>
+        <title>Flask Web App</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    </head>
 <body>
     <form method="POST">
         Username: <input type="text" name="username" required><br>
