@@ -1,3 +1,9 @@
+TEST VALUES:
+> ' OR '1'='1
+> make characters less than 8
+> Simulate Brute Force Attack
+> <script>alert('XSS')</script>
+
 CORRECT:
 
 from flask import Flask, request, render_template

@@ -18,7 +18,8 @@ def index():
         password = request.form['password']
         # Vulnerable: No input validation
         conn = sqlite3.connect('users.db')
-        conn.execute(f"INSERT INTO users (username, password) VALUES ('{username}', '{password}')")
+        conn.execute(f"INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+
         conn.commit()
         conn.close()
         return "User Registered"
